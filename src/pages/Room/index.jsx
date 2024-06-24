@@ -1,36 +1,59 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt'
+import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 
 const RoomPage = () => {
     const { roomId } = useParams();
+    const meetingContainer = useRef(null);
 
-    const myMeeting = async (element) => {
-        const appID = 836560285;
-        const serverSecret = "7ba37851a9ac20ad45d3c90483e21006";
-        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-            appID,
-            serverSecret,
-            roomId,
-            Date.now().toString(),
-            "Madisetty lalitha"
-        );
-        const zc = ZegoUIKitPrebuilt.create(kitToken);
-        zc.joinRoom({
-            container: element,
-            sharedLinks: [
-                {
-                  name: 'Copy Link',
-                  url: "http://localhost:3000/room/$(roomId)",
+    useEffect(() => {
+        const myMeeting = async () => {
+            const appID = Number(process.env.REACT_APP_ZEGO_APP_ID);
+            const serverSecret = process.env.REACT_APP_ZEGO_SERVER_SECRET;
+
+            if (isNaN(appID)) {
+                console.error('appID must be a number');
+                return;
+            }
+
+            if (!serverSecret || !roomId) {
+                console.error('Missing required parameters for Zego UIKit');
+                return;
+            }
+
+            const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
+                appID,
+                serverSecret,
+                roomId,
+                Date.now().toString(),
+                "Lalitha Madisetty"
+            );
+
+            const zc = ZegoUIKitPrebuilt.create(kitToken);
+            if (!zc) {
+                console.error('Failed to create Zego UIKit instance');
+                return;
+            }
+
+            zc.joinRoom({
+                container: meetingContainer.current,
+                sharedLinks: [
+                    {
+                        name: 'Copy Link',
+                        url: "${window.location.origin}/room/${roomId}",
+                    },
+                ],
+                scenario: {
+                    mode: ZegoUIKitPrebuilt.GroupCall,
                 },
-            ],
-            scenario: {
-                mode: ZegoUIKitPrebuilt.GroupCall,
-            },
-            showScreenSharingButton: true,
+                showScreenSharingButton: true,
+            });
+        };
 
-        })
-    }
-    return <div>
-        <div ref={myMeeting} />
-    </div>
+        myMeeting();
+    }, [roomId]);
+
+    return <div ref={meetingContainer} />;
+};
+
+export default RoomPage;
