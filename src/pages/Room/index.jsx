@@ -26,7 +26,7 @@ const RoomPage = () => {
                 serverSecret,
                 roomId,
                 Date.now().toString(),
-                "Lakshmi Likitha"
+                "Madisetty Lalitha"
             );
 
             const zc = ZegoUIKitPrebuilt.create(kitToken);
