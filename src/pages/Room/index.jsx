@@ -26,7 +26,7 @@ const RoomPage = () => {
                 serverSecret,
                 roomId,
                 Date.now().toString(),
-                "Lalitha Madisetty"
+                "Lakshmi Likitha"
             );
 
             const zc = ZegoUIKitPrebuilt.create(kitToken);
@@ -40,11 +40,11 @@ const RoomPage = () => {
                 sharedLinks: [
                     {
                         name: 'Copy Link',
-                        url: "${window.location.origin}/room/${roomId}",
+                        url: ${window.location.origin}/room/${roomId},
                     },
                 ],
                 scenario: {
-                    mode: ZegoUIKitPrebuilt.GroupCall,
+                    mode: ZegoUIKitPrebuilt.OneONoneCall,
                 },
                 showScreenSharingButton: true,
             });
