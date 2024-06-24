@@ -7,7 +7,7 @@ const HomePage = () => {
     const navigate = useNavigate()
 
     const handleJoinRoom = useCallback(()=>{
-        "navigate(/room/${value})";
+        navigate(`/room/${value}`);
     },[navigate, value]);
     return (<div>
         <input 
